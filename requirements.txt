@@ -1,0 +1,16 @@
+camelot-py==0.11.0
+faiss-cpu==1.7.4
+gcsfs==2023.6.0
+ghostscript==0.7
+google-cloud-aiplatform>=1.38.1
+google-cloud-documentai>=2.18.0
+google-cloud-storage>=2.10.0
+google-generativeai
+gradio==3.41.2
+json5==0.9.14
+llama-index>=0.8.13
+nltk==3.8.1
+openai==0.27.9
+opencv-python==4.8.0.76
+pdfplumber==0.10.2
+PyPDF2==3.0.1
