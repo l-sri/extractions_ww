@@ -13,8 +13,10 @@ rm -rf /mnt/resources/woolworths/raw_data
 mkdir -p /mnt/resources/woolworths/raw_data
 rm -rf /mnt/resources/woolworths/raw_pdfs
 mkdir -p /mnt/resources/woolworths/raw_pdfs
-mkdir -p /mnt/resources/woolworths/test_uploads
+rm -rf /mnt/resources/woolworths/toc_json
+mkdir -p /mnt/resources/woolworths/toc_json
 gsutil -m cp -r "gs://woolworths_argo/extracted_txt_teamcare_format/*" /mnt/resources/woolworths/extracted_txt_teamcare_format/
 gsutil -m cp -r "gs://woolworths_argo/extracted_txt/*" /mnt/resources/woolworths/extracted_txt/ 
 gsutil -m cp -r "gs://woolworths_argo/raw_data/*" /mnt/resources/woolworths/raw_data/
 gsutil -m cp -r "gs://woolworths_argo/raw_pdfs/*" /mnt/resources/woolworths/raw_pdfs/
+gsutil -m cp -r "gs://woolworths_argo/toc_json/*" /mnt/resources/woolworths/toc_json/
