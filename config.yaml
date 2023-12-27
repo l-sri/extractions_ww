@@ -1,0 +1,15 @@
+# Folders
+raw_data: "/mnt/resources/woolworths/raw_data/"
+extracted_txt: "/mnt/resources/woolworths/extracted_txt/"
+toc_json: "/mnt/resources/woolworths/toc_json/"
+final_ext_txt: "/mnt/resources/woolworths/extracted_txt_teamcare_format/"
+split_docs: 
+  - "Markdown Protocols - LIVE Document"
+# Extract the text again form PDF even if it has been previously extracted (it is more efficient to not redo unless changes are made to the extraction code)
+redo_extract: True 
+
+# GCP creds/info
+project_id: "llmapps"
+location: "us"
+processor_id: "c0ec8848a9756a33"
+mime_type: "application/pdf"
