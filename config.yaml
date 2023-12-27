@@ -1,0 +1,11 @@
+input_folders:
+  - "/mnt/resources/woolworths/raw_data"
+output_folder: "/mnt/resources/woolworths/extracted_txt"
+redo_extract: True # Extract the text again form PDF even if it has been previously extracted (it is more efficient to not redo unless changes are made to the extraction code)
+
+
+# GCP creds/info
+project_id: "llmapps"
+location: "us"
+processor_id: "c0ec8848a9756a33"
+mime_type: "application/pdf"
