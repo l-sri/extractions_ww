@@ -282,4 +282,5 @@ logs/
 data/**
 vector_store/**
 vector_store_*/
+venv-ww/
 output_files/**
