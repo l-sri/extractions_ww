@@ -29,52 +29,54 @@ def load_config(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
-def extract_pdf(input_folders, output_folder, redo_extract):
+def extract_pdf(input_folder, output_folder, redo_extract):
     
-    for folder in input_folders:
-            
-        files = os.listdir(folder)
+    files = os.listdir(input_folder)
 
-        # Filter out the pdf files
-        pdf_files = []
-        for file in files:
-            if file.endswith(".pdf"):
-                pdf_files.append(file)
+    # Filter out the pdf files
+    pdf_files = []
+    for file in files:
+        if file.endswith(".pdf"):
+            pdf_files.append(file)
 
 
-        for pdf_file in pdf_files:
-            print("Processing: ", pdf_file)
-            document_hash = pdf_file.split('.pdf')[0]
-            file_path = os.path.join(folder, pdf_file)
-            # latex_tables = get_latex_tables_camelot(file_path)
-            # print(f'Tables : {latex_tables}')
-            page_data, tables, doc_content = extract_and_clean_tables(file_path)
-            # print(doc_content)
+    for pdf_file in pdf_files:
+
+        print("-"*50)
+        print("Processing: ", pdf_file)
+        document_hash = pdf_file.split('.pdf')[0]
+        file_path = os.path.join(input_folder, pdf_file)
+        
+        # latex_tables = get_latex_tables_camelot(file_path)
+        # print(f'Tables : {latex_tables}')
+        page_data, tables, doc_content = extract_and_clean_tables(file_path)
+        # print(doc_content)
 
 
-            output_path = pdf_output_folder + document_hash + ".txt"
-            print(f"Number of pages in {pdf_file}: {len(doc_content)}")
-            file = open(output_path, "w")
-            
-            # for dc in doc_content:
-            for i, dc in enumerate(doc_content):
-                file.write(f"Page Number {i+1}:\n")
+        output_path = pdf_output_folder + document_hash + ".txt"
+        print(f"Number of pages in {pdf_file}: {len(doc_content)}")
+        print(f"Saving extracted text to {output_path}")
+        file = open(output_path, "w")
+        
+        # for dc in doc_content:
+        for i, dc in enumerate(doc_content):
+            file.write(f"Page Number {i+1}:\n")
+            file.write("\n")
+            for i in range(len(dc)):#item in dc:
+                item = dc[i]
+                
+                # print('Writing tables')
+                # print(i, item)
+                if i > 0:
+                    for table in item:
+                        file.write(table)
+                else:
+                    # print('Writing text')
+                    file.write(item)
                 file.write("\n")
-                for i in range(len(dc)):#item in dc:
-                    item = dc[i]
-                    
-                    # print('Writing tables')
-                    # print(i, item)
-                    if i > 0:
-                        for table in item:
-                            file.write(table)
-                    else:
-                        # print('Writing text')
-                        file.write(item)
-                    file.write("\n")
-                    # print(item)
-                file.write("\n")
-            file.close()
+                # print(item)
+            file.write("\n")
+        file.close()
 
 if __name__ == "__main__":
 
@@ -96,9 +98,9 @@ if __name__ == "__main__":
         # Handle the error gracefully, e.g., exit or provide a default value
 
     # Get the input and output folder for pdfs
-    pdf_input_folders = config.get("input_folders")
-    pdf_output_folder = config.get("output_folder")
-    # print(pdf_input_folders)
+    pdf_input_folder = config.get("raw_data")
+    pdf_output_folder = config.get("extracted_txt")
+    print(f"Processing pdf files from {pdf_input_folder}")
     
     # GCP creds/Info
     project_id = config.get("project_id")
@@ -110,15 +112,14 @@ if __name__ == "__main__":
     redo_extract = config.get("redo_extract")
 
     # Check to make sure input folder exists and create output folder if it does not exist
-    for folder in pdf_input_folders:
-        if not os.path.exists(folder):
-            print(f"{folder} does not exists!")
+    if not os.path.exists(pdf_input_folder):
+        print(f"{pdf_input_folder} does not exists!")
     
     for path in [pdf_output_folder]:
         if not os.path.exists(path):
             os.mkdir(path)
 
     
-    extract_pdf(input_folders = pdf_input_folders, output_folder = pdf_output_folder, redo_extract = redo_extract)
-
+    extract_pdf(input_folder = pdf_input_folder, output_folder = pdf_output_folder, redo_extract = redo_extract)
+    print("*"*100)
 # #python3 pdf_parser.py data/invoices/ data/purchase\ orders/
