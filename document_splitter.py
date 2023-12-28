@@ -27,13 +27,6 @@ def split_document_into_sections(document_name, input_toc_folder, input_txt_fold
     pages = text.split("Page Number ")[1:]
     pages = ["Page Number " + page for page in pages]
 
-    # print(len(pages))
-    # print("^"*100)
-    # print(pages[0])
-    # print("^"*100)
-    # print(pages[1])
-    # print("^"*100)
-    # print(pages[2])
 
     # Iterate through each section in the TOC
     for section_name, page_range in toc.items():
@@ -69,10 +62,6 @@ if __name__ == "__main__":
     else:
         print("Error loading config file!")
         # Handle the error gracefully, e.g., exit or provide a default value
-
-    # Get the input and output folder for pdfs
-    pdf_input_folders = config.get("input_folders")
-    pdf_output_folder = config.get("output_folder")
 
     # Specify input and output folder paths (replace with actual paths)
     input_toc_folder = config.get("toc_json")
