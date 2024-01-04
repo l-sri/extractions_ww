@@ -5,29 +5,9 @@ import argparse
 import yaml
 parent_dir = "."
 sys.path.append(parent_dir)
+from utils.helpers import load_config, print_yaml_content
 from utils.docAI_extraction import process_local_document_in_chunks
 from utils.table_extraction import get_latex_tables_camelot, get_pdf_table_latex, extract_and_clean_tables
-# import argo_utils
-
-def print_yaml_content(file_path):
-    """Prints the content of a YAML file in a human-readable format."""
-
-    try:
-        with open(file_path, "r") as file:
-            yaml_data = yaml.safe_load(file)
-
-        # Print the parsed YAML data in a user-friendly way
-        print(f"Content from {file_path}: \n")
-        print(yaml.dump(yaml_data, default_flow_style=False))
-
-    except FileNotFoundError:
-        print(f"Error: File '{file_path}' not found.")
-    except yaml.YAMLError as exc:
-        print(f"Error parsing YAML file: {exc}")
-
-def load_config(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
 
 def extract_pdf(input_folder, output_folder, redo_extract):
     
@@ -91,26 +71,24 @@ if __name__ == "__main__":
     config = load_config(config_file)
 
     if config is not None:
-        pdf_input_folders = config.get("input_folders")
-        # Proceed with using pdf_input_folders
+        # Get the input and output folder for pdfs
+        pdf_input_folder = config.get("raw_data")
+        pdf_output_folder = config.get("extracted_txt")
+        print(f"Processing pdf files from {pdf_input_folder}")
+        
+        # GCP creds/Info
+        project_id = config.get("project_id")
+        location = config.get("location")
+        processor_id = config.get("processor_id")
+        mime_type = config.get("mime_type")
+
+        # Process paramaters
+        redo_extract = config.get("redo_extract")
     else:
         print("Error loading config file!")
         # Handle the error gracefully, e.g., exit or provide a default value
 
-    # Get the input and output folder for pdfs
-    pdf_input_folder = config.get("raw_data")
-    pdf_output_folder = config.get("extracted_txt")
-    print(f"Processing pdf files from {pdf_input_folder}")
     
-    # GCP creds/Info
-    project_id = config.get("project_id")
-    location = config.get("location")
-    processor_id = config.get("processor_id")
-    mime_type = config.get("mime_type")
-
-    # Process paramaters
-    redo_extract = config.get("redo_extract")
-
     # Check to make sure input folder exists and create output folder if it does not exist
     if not os.path.exists(pdf_input_folder):
         print(f"{pdf_input_folder} does not exists!")
