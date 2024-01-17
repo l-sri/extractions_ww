@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     if config is not None:
         # Get the input and output folder for pdfs
-        input_txt_folder_path = config.get("extracted_txt")# Specify the folder path
+        input_txt_folder_path = config.get("extracted_infographics_txt")# Specify the folder path
         outpt_txt_folder_path = config.get("final_ext_txt")# Specify the folder path
     else:
         print("Error loading config file!")

@@ -1,5 +1,6 @@
 # Folders
 raw_data: "/mnt/resources/woolworths/raw_data/"
+extracted_infographics_txt: "/mnt/resources/woolworths/extracted_infographics_txt/"
 extracted_txt: "/mnt/resources/woolworths/extracted_txt/"
 toc_json: "/mnt/resources/woolworths/toc_json/"
 final_ext_txt: "/mnt/resources/woolworths/extracted_txt_teamcare_format/"
