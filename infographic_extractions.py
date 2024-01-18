@@ -79,53 +79,58 @@ generation_config = GenerationConfig(
     max_output_tokens=2048,
 )
 
-folder = "data/imagefiles/Bakery 05.08 - Our Routine"
-image_files = [f for f in os.listdir(folder) if f.endswith((".jpg", ".png", ".bmp"))]
-image_files = sorted(image_files)
 
-result_string = ""
-number = 1
-for image_file in image_files:
-    image_path = os.path.join(folder, image_file)
-    image = load_image_from_file(image_path)
+image_folder_path = "data/imagefiles"
+output_folder_path = "/mnt/resources/woolworths/extracted_infographics_txt"
 
-    instructions = """Instructions: Consider the following image that has exactly one of the following two formats:
-                      1) It contains a routine where the X-axis has time and the Y-axis has sections that contain tasks. There are a lot of tasks written here which can be mapped to a time period from the X-axis. Map these tasks to a start time and an end time.
-                      2) It contains text with some tables. All text from the tables needs to be extracted accurately."""
-    prompt1 = """
-    Do the following steps:
-    1. Check what type of content is inside the image. Make sure you look at each and every part of the image for information.
-    2. If the image is about a routine, include all tasks mentioned there along with the time when they need to be done. Be specific and make sure you don't miss anything.
-       If the image is just a bunch of regular text with tables, extract it fully and include everything. Be specific and make sure you don't miss anything.
-    3. Please double check your work and make sure tasks are being mapped correctly.
-    """
+for folder_name in os.listdir(image_folder_path):
+    folder_path = os.path.join(image_folder_path, folder_name)
+    if os.path.isdir(folder_path):
+        image_files = [
+            f for f in os.listdir(folder_path) if f.endswith((".jpg", ".png", ".bmp"))
+        ]
+        image_files = sorted(image_files)
 
-    contents = [
-        instructions,
-        image,
-        prompt1,
-    ]
+        result_string = ""
+        number = 1
+        for image_file in image_files:
+            image_path = os.path.join(folder_path, image_file)
+            image = load_image_from_file(image_path)
 
-    responses = multimodal_model.generate_content(contents, stream=True, generation_config= generation_config)
+            instructions = """Instructions: Consider the following image that has exactly one of the following two formats:
+                            Type 1) It contains a routine where the X-axis has time and the Y-axis has sections that contain tasks. There are a lot of tasks written here which can be mapped to a time period from the X-axis. Map these tasks to a start time and an end time.
+                            Type 2) It contains text with some tables. All text from the tables needs to be extracted accurately."""
+            prompt1 = """
+            Do the following steps:
+            1. Check if the content inside the image is of format `Type 1` or format `Type 2`. Make sure you look at each and every part of the image for information.
+            2. If the image is of format `Type 1`, include all tasks mentioned there along with the start time and end time for the corresponding task. Be specific and make sure you don't miss anything.
+            If the image is of format `Type 2`, extract it fully and include all text including any titles if applicable. Be specific and make sure you don't miss anything.
+            3. Please double check your work and make sure all text is being extracted.
+            """
 
-    # print("-------Prompt--------")
-    # print_multimodal_prompt(contents)
+            contents = [
+                instructions,
+                image,
+                prompt1,
+            ]
 
-    # print("\n-------Response--------")
-    if number == 1:
-        result_string += ""
-    else:
-        result_string += "\n\n"
-    result_string += "Page Number: {}".format(number) + "\n\n"
-    for response in responses:
-        result_string += response.text
-    number+=1
+            responses = multimodal_model.generate_content(contents, stream=True, generation_config= generation_config)
 
-print(result_string)
+            # print("-------Prompt--------")
+            # print_multimodal_prompt(contents)
 
-directory_path = "data/imageextractions"
+            # print("\n-------Response--------")
+            if number == 1:
+                result_string += ""
+            else:
+                result_string += "\n\n"
+            result_string += "Page Number: {}".format(number) + "\n\n"
+            for response in responses:
+                result_string += response.text
+            number+=1
 
-output_file_path = os.path.join(directory_path, "Bakery 05.08 - Our Routine.txt")
-with open(output_file_path, "w") as f:
-  # Write the string to the file
-  f.write(result_string)
+        print(result_string)
+
+        output_file_path = os.path.join(output_folder_path, f"{folder_name}.txt")
+        with open(output_file_path, "w") as f:
+            f.write(result_string)
